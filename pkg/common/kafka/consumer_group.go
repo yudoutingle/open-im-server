@@ -19,8 +19,6 @@ import (
 
 	"github.com/OpenIMSDK/tools/log"
 
-	"github.com/openimsdk/open-im-server/v3/pkg/common/config"
-
 	"github.com/IBM/sarama"
 )
 
@@ -37,17 +35,10 @@ type MConsumerGroupConfig struct {
 }
 
 func NewMConsumerGroup(consumerConfig *MConsumerGroupConfig, topics, addrs []string, groupID string) *MConsumerGroup {
-	consumerGroupConfig := sarama.NewConfig()
-	consumerGroupConfig.Version = consumerConfig.KafkaVersion
-	consumerGroupConfig.Consumer.Offsets.Initial = consumerConfig.OffsetsInitial
-	consumerGroupConfig.Consumer.Return.Errors = consumerConfig.IsReturnErr
-	if config.Config.Kafka.Username != "" && config.Config.Kafka.Password != "" {
-		consumerGroupConfig.Net.SASL.Enable = true
-		consumerGroupConfig.Net.SASL.User = config.Config.Kafka.Username
-		consumerGroupConfig.Net.SASL.Password = config.Config.Kafka.Password
-	}
-	SetupTLSConfig(consumerGroupConfig)
-	consumerGroup, err := sarama.NewConsumerGroup(addrs, groupID, consumerGroupConfig)
+	config := NewKafkaConfig()
+	config.Consumer.Offsets.Initial = consumerConfig.OffsetsInitial
+	config.Consumer.Return.Errors = consumerConfig.IsReturnErr
+	consumerGroup, err := sarama.NewConsumerGroup(addrs, groupID, config)
 	if err != nil {
 		panic(err.Error())
 	}

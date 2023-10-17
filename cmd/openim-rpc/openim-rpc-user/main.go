@@ -21,7 +21,7 @@ import (
 )
 
 func main() {
-	rpcCmd := cmd.NewRpcCmd(cmd.RpcUserServer)
+	rpcCmd := cmd.NewRpcCmd("user")
 	rpcCmd.AddPortFlag()
 	rpcCmd.AddPrometheusPortFlag()
 	if err := rpcCmd.Exec(); err != nil {

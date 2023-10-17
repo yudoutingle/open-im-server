@@ -46,9 +46,6 @@ type POfflinePush struct {
 }
 
 type configStruct struct {
-	Envs struct {
-		Discovery string `yaml:"discovery"`
-	}
 	Zookeeper struct {
 		Schema   string   `yaml:"schema"`
 		ZkAddr   []string `yaml:"address"`
@@ -78,10 +75,9 @@ type configStruct struct {
 	} `yaml:"mongo"`
 
 	Redis struct {
-		ClusterMode bool     `yaml:"clusterMode"`
-		Address     []string `yaml:"address"`
-		Username    string   `yaml:"username"`
-		Password    string   `yaml:"password"`
+		Address  []string `yaml:"address"`
+		Username string   `yaml:"username"`
+		Password string   `yaml:"password"`
 	} `yaml:"redis"`
 
 	Kafka struct {
@@ -188,11 +184,10 @@ type configStruct struct {
 	} `yaml:"log"`
 
 	LongConnSvr struct {
-		OpenImMessageGatewayPort []int `yaml:"openImMessageGatewayPort"`
-		OpenImWsPort             []int `yaml:"openImWsPort"`
-		WebsocketMaxConnNum      int   `yaml:"websocketMaxConnNum"`
-		WebsocketMaxMsgLen       int   `yaml:"websocketMaxMsgLen"`
-		WebsocketTimeout         int   `yaml:"websocketTimeout"`
+		OpenImWsPort        []int `yaml:"openImWsPort"`
+		WebsocketMaxConnNum int   `yaml:"websocketMaxConnNum"`
+		WebsocketMaxMsgLen  int   `yaml:"websocketMaxMsgLen"`
+		WebsocketTimeout    int   `yaml:"websocketTimeout"`
 	} `yaml:"longConnSvr"`
 
 	Push struct {
@@ -276,6 +271,12 @@ type configStruct struct {
 		ThirdPrometheusPort           []int `yaml:"thirdPrometheusPort"`
 	} `yaml:"prometheus"`
 	Notification notification `yaml:"notification"`
+
+	Colline struct {
+		Host              string `yaml:"host"`
+		CustomCallbackApi string `yaml:"custom_callback_api"`
+		LinkOnceUser      string `yaml:"link_once_user"`
+	} `yaml:"colline"`
 }
 
 type notification struct {

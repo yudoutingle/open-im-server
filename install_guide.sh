@@ -145,13 +145,13 @@ EOF
     edit_config
     edit_enterprise_config
     
-    cd scripts;
+    cd scripts_new;
     chmod +x *.sh;
     ./init_pwd.sh;
     ./env_check.sh;
     cd ..;
     docker-compose up -d;
-    cd scripts;
+    cd scripts_new;
     ./docker-check-service.sh;
 }
 

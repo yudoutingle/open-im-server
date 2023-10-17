@@ -20,7 +20,7 @@
 ################################################################################
 
 # shellcheck disable=SC2034
-if [ -z "${COLOR_OPEN+x}" ]; then
+if [[ ! -v COLOR_OPEN ]]; then
     COLOR_OPEN=1
 fi
 

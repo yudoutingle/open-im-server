@@ -163,11 +163,7 @@ func (u *UserMongoDriver) GetAllSubscribeList(ctx context.Context, userID string
 		bson.M{"user_id": SubscriptionPrefix + userID})
 	err = cursor.Decode(&user)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return []string{}, nil
-		} else {
-			return nil, errs.Wrap(err)
-		}
+		return nil, errs.Wrap(err)
 	}
 	return user.UserIDList, nil
 }
@@ -180,11 +176,7 @@ func (u *UserMongoDriver) GetSubscribedList(ctx context.Context, userID string) 
 		bson.M{"user_id": SubscribedPrefix + userID})
 	err = cursor.Decode(&user)
 	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return []string{}, nil
-		} else {
-			return nil, errs.Wrap(err)
-		}
+		return nil, errs.Wrap(err)
 	}
 	return user.UserIDList, nil
 }

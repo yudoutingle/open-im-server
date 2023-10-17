@@ -12,18 +12,38 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package common
+package data_conversion
 
-import "fmt"
+import "testing"
 
-func ErrorPrint(s string) {
-	fmt.Printf("\x1b[%dm%v\x1b[0m\n", 31, s)
+// pass
+func TestUserConversion(t *testing.T) {
+	UserConversion()
 }
 
-func SuccessPrint(s string) {
-	fmt.Printf("\x1b[%dm%v\x1b[0m\n", 32, s)
+// pass
+func TestFriendConversion(t *testing.T) {
+	FriendConversion()
 }
 
-func WarningPrint(s string) {
-	fmt.Printf("\x1b[%dmWarning: But %v\x1b[0m\n", 33, s)
+// pass
+func TestGroupConversion(t *testing.T) {
+	GroupConversion()
+	GroupMemberConversion()
+}
+
+// pass
+func TestBlacksConversion(t *testing.T) {
+	BlacksConversion()
+}
+
+// pass
+func TestRequestConversion(t *testing.T) {
+	RequestConversion()
+}
+
+// pass
+func TestChatLogsConversion(t *testing.T) {
+	// If the printed result is too long, the console will not display it, but it can run normally
+	ChatLogsConversion()
 }

@@ -26,15 +26,11 @@ import (
 	"github.com/openimsdk/open-im-server/v3/pkg/common/config"
 )
 
-type RootCmdPt interface {
-	GetPortFromConfig(portType string) int
-}
 type RootCmd struct {
 	Command        cobra.Command
 	Name           string
 	port           int
 	prometheusPort int
-	cmdItf         RootCmdPt
 }
 
 type CmdOpts struct {
@@ -80,9 +76,7 @@ func NewRootCmd(name string, opts ...func(*CmdOpts)) (rootCmd *RootCmd) {
 	rootCmd.addConfFlag()
 	return rootCmd
 }
-func (r *RootCmd) SetRootCmdPt(cmdItf RootCmdPt) {
-	r.cmdItf = cmdItf
-}
+
 func (r *RootCmd) addConfFlag() {
 	r.Command.Flags().StringP(constant.FlagConf, "c", "", "Path to config file folder")
 }
@@ -93,9 +87,6 @@ func (r *RootCmd) AddPortFlag() {
 
 func (r *RootCmd) getPortFlag(cmd *cobra.Command) int {
 	port, _ := cmd.Flags().GetInt(constant.FlagPort)
-	if port == 0 {
-		port = r.PortFromConfig(constant.FlagPort)
-	}
 	return port
 }
 
@@ -109,9 +100,6 @@ func (r *RootCmd) AddPrometheusPortFlag() {
 
 func (r *RootCmd) getPrometheusPortFlag(cmd *cobra.Command) int {
 	port, _ := cmd.Flags().GetInt(constant.FlagPrometheusPort)
-	if port == 0 {
-		port = r.PortFromConfig(constant.FlagPrometheusPort)
-	}
 	return port
 }
 
@@ -131,13 +119,4 @@ func (r *RootCmd) Execute() error {
 
 func (r *RootCmd) AddCommand(cmds ...*cobra.Command) {
 	r.Command.AddCommand(cmds...)
-}
-
-func (r *RootCmd) GetPortFromConfig(portType string) int {
-	fmt.Println("RootCmd.GetPortFromConfig:", portType)
-	return 0
-}
-func (r *RootCmd) PortFromConfig(portType string) int {
-	fmt.Println("PortFromConfig:", portType)
-	return r.cmdItf.GetPortFromConfig(portType)
 }

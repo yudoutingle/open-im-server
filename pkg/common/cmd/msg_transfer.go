@@ -24,10 +24,8 @@ type MsgTransferCmd struct {
 	*RootCmd
 }
 
-func NewMsgTransferCmd() *MsgTransferCmd {
-	ret := &MsgTransferCmd{NewRootCmd("msgTransfer")}
-	ret.SetRootCmdPt(ret)
-	return ret
+func NewMsgTransferCmd() MsgTransferCmd {
+	return MsgTransferCmd{NewRootCmd("msgTransfer")}
 }
 
 func (m *MsgTransferCmd) addRunE() {

@@ -21,9 +21,7 @@ type CronTaskCmd struct {
 }
 
 func NewCronTaskCmd() *CronTaskCmd {
-	ret := &CronTaskCmd{NewRootCmd("cronTask", WithCronTaskLogName())}
-	ret.SetRootCmdPt(ret)
-	return ret
+	return &CronTaskCmd{NewRootCmd("cronTask", WithCronTaskLogName())}
 }
 
 func (c *CronTaskCmd) addRunE(f func() error) {

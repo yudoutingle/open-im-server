@@ -38,7 +38,6 @@ type PersistentConsumerHandler struct {
 func NewPersistentConsumerHandler(database controller.ChatLogDatabase) *PersistentConsumerHandler {
 	return &PersistentConsumerHandler{
 		persistentConsumerGroup: kfk.NewMConsumerGroup(&kfk.MConsumerGroupConfig{
-			KafkaVersion:   sarama.V2_0_0_0,
 			OffsetsInitial: sarama.OffsetNewest, IsReturnErr: false,
 		}, []string{config.Config.Kafka.LatestMsgToRedis.Topic},
 			config.Config.Kafka.Addr, config.Config.Kafka.ConsumerGroupID.MsgToMySql),

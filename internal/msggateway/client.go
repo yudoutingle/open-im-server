@@ -207,8 +207,8 @@ func (c *Client) handleMessage(message []byte) error {
 			binaryReq.ReqIdentifier,
 		)
 	}
-
-	return c.replyMessage(ctx, &binaryReq, messageErr, resp)
+	c.replyMessage(ctx, &binaryReq, messageErr, resp)
+	return nil
 }
 
 func (c *Client) setAppBackgroundStatus(ctx context.Context, req Req) ([]byte, error) {
@@ -229,7 +229,7 @@ func (c *Client) close() {
 	c.longConnServer.UnRegister(c)
 }
 
-func (c *Client) replyMessage(ctx context.Context, binaryReq *Req, err error, resp []byte) error {
+func (c *Client) replyMessage(ctx context.Context, binaryReq *Req, err error, resp []byte) {
 	errResp := apiresp.ParseError(err)
 	mReply := Resp{
 		ReqIdentifier: binaryReq.ReqIdentifier,
@@ -244,10 +244,6 @@ func (c *Client) replyMessage(ctx context.Context, binaryReq *Req, err error, re
 	if err != nil {
 		log.ZWarn(ctx, "wireBinaryMsg replyMessage", err, "resp", mReply.String())
 	}
-	if binaryReq.ReqIdentifier == WsLogoutMsg {
-		return errors.New("user logout")
-	}
-	return nil
 }
 
 func (c *Client) PushMessage(ctx context.Context, msgData *sdkws.MsgData) error {
