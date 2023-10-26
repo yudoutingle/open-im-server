@@ -47,11 +47,14 @@ function execute_scripts() {
         # Construct the argument based on the script name.
         arg="openim::${script_name}::start"
 
+        chmod +x $script_path
+
         # Check if the script file exists and is executable.
         if [[ -x "$script_path" ]]; then
             openim::log::status "Starting script: ${script_path##*/}"     # Log the script name.
 
             # Execute the script with the constructed argument.
+            echo "exec :  $script_path $arg"
             "$script_path" "$arg"
 
             # Check if the script executed successfully.
@@ -72,12 +75,12 @@ function execute_scripts() {
 TOOLS_START_SCRIPTS_PATH=${START_SCRIPTS_PATH}/openim-tools.sh
 
 openim::log::info "\n## Pre Starting OpenIM services"
-${TOOLS_START_SCRIPTS_PATH} openim::tools::pre-start
+bash ${TOOLS_START_SCRIPTS_PATH} openim::tools::pre-start
 
 openim::log::info "\n## Starting OpenIM services"
 execute_scripts
 
 openim::log::info "\n## Post Starting OpenIM services"
-${TOOLS_START_SCRIPTS_PATH} openim::tools::post-start
+bash ${TOOLS_START_SCRIPTS_PATH} openim::tools::post-start
 
 openim::log::success "✨  All OpenIM services have been successfully started!"

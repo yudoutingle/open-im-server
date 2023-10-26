@@ -28,7 +28,7 @@ import (
 	"github.com/OpenIMSDK/tools/log"
 	"github.com/OpenIMSDK/tools/mcontext"
 	"github.com/OpenIMSDK/tools/utils"
-
+	callback "github.com/openimsdk/open-im-server/v3/internal/callback"
 	promepkg "github.com/openimsdk/open-im-server/v3/pkg/common/prome"
 )
 
@@ -40,16 +40,22 @@ func (m *msgServer) SendMsg(ctx context.Context, req *pbmsg.SendMsgReq) (resp *p
 			return nil, errs.ErrMessageHasReadDisable.Wrap()
 		}
 		m.encapsulateMsgData(req.MsgData)
+		var resp *pbmsg.SendMsgResp
 		switch req.MsgData.SessionType {
 		case constant.SingleChatType:
-			return m.sendMsgSingleChat(ctx, req)
+			resp, error = m.sendMsgSingleChat(ctx, req)
 		case constant.NotificationChatType:
-			return m.sendMsgNotification(ctx, req)
+			resp, error = m.sendMsgNotification(ctx, req)
 		case constant.SuperGroupChatType:
-			return m.sendMsgSuperGroupChat(ctx, req)
+			resp, error = m.sendMsgSuperGroupChat(ctx, req)
 		default:
 			return nil, errs.ErrArgs.Wrap("unknown sessionType")
 		}
+		//  回调 数字办公助手
+		if error == nil && req.MsgData.GetContentType() == constant.Custom {
+			callback.CustomCallback(ctx, req.MsgData)
+		}
+		return resp, error
 	} else {
 		return nil, errs.ErrArgs.Wrap("msgData is nil")
 	}

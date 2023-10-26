@@ -76,7 +76,6 @@ func run(port int) error {
 	log.ZInfo(context.Background(), "api register public config to discov")
 	if err = client.RegisterConf2Registry(constant.OpenIMCommonConfigKey, config.Config.EncodeConfig()); err != nil {
 		log.ZError(context.Background(), "Failed to register public config to discov", err)
-
 		return err
 	}
 	log.ZInfo(context.Background(), "api register public config to discov success")
@@ -92,8 +91,7 @@ func run(port int) error {
 
 	err = router.Run(address)
 	if err != nil {
-		log.ZError(context.Background(), "api run failed", err, "address", address)
-
+		log.ZError(context.Background(), "api run failed ", err, "address", address)
 		return err
 	}
 

@@ -38,7 +38,7 @@ const (
 // newMysqlGormDB Initialize the database connection.
 func newMysqlGormDB() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
-		config.Config.Mysql.Username, config.Config.Mysql.Password, config.Config.Mysql.Address[0], "mysql")
+		config.Config.Mysql.Username, config.Config.Mysql.Password, config.Config.Mysql.Address[0], config.Config.Mysql.Database)
 
 	db, err := connectToDatabase(dsn, maxRetry)
 	if err != nil {

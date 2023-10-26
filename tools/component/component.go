@@ -139,8 +139,7 @@ func checkMysql() error {
 			sqlDB.Close()
 		}
 	}()
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
-		config.Config.Mysql.Username, config.Config.Mysql.Password, config.Config.Mysql.Address[0], "mysql")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.Config.Mysql.Username, config.Config.Mysql.Password, config.Config.Mysql.Address[0], config.Config.Mysql.Database)
 	db, err := gorm.Open(mysql.Open(dsn), nil)
 	if err != nil {
 		return errs.Wrap(err)
@@ -188,6 +187,7 @@ func checkMongo() error {
 	if err != nil {
 		return errs.Wrap(err)
 	} else {
+		//err = client.Ping(context.TODO(), &readpref.ReadPref{})
 		err = client.Ping(context.TODO(), nil)
 		if err != nil {
 			return errs.Wrap(err)
@@ -290,13 +290,7 @@ func checkKafka() error {
 			kafkaClient.Close()
 		}
 	}()
-	cfg := sarama.NewConfig()
-	if config.Config.Kafka.Username != "" && config.Config.Kafka.Password != "" {
-		cfg.Net.SASL.Enable = true
-		cfg.Net.SASL.User = config.Config.Kafka.Username
-		cfg.Net.SASL.Password = config.Config.Kafka.Password
-	}
-	kafka.SetupTLSConfig(cfg)
+	cfg := kafka.NewKafkaConfig()
 	kafkaClient, err := sarama.NewClient(config.Config.Kafka.Addr, cfg)
 	if err != nil {
 		return errs.Wrap(err)
