@@ -31,8 +31,7 @@ output/
 _output/
 
 ### OpenIM Config ###
-config/config.yaml
-./config/config.yaml
+
 .env
 ./.env
 
@@ -399,5 +398,3 @@ Sessionx.vim
 # End of https://www.toptal.com/developers/gitignore/api/go,git,vim,tags,test,emacs,backup,jetbrains
 .idea
 dist/
-.env
-config/config.yaml

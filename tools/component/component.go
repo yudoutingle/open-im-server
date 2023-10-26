@@ -35,7 +35,6 @@ import (
 	"github.com/go-zookeeper/zk"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
@@ -46,7 +45,7 @@ import (
 )
 
 const (
-	// defaultCfgPath is the default path of the configuration file
+	// defaultCfgPath is the default path of the configuration file.
 	defaultCfgPath           = "../../../../../config/config.yaml"
 	minioHealthCheckDuration = 1
 	maxRetry                 = 100
@@ -66,6 +65,7 @@ func initCfg() error {
 	if err != nil {
 		return err
 	}
+
 	return yaml.Unmarshal(data, &config.Config)
 }
 
@@ -79,6 +79,7 @@ func main() {
 
 	if err := initCfg(); err != nil {
 		fmt.Printf("Read config failed: %v\n", err)
+
 		return
 	}
 
@@ -111,6 +112,7 @@ func main() {
 
 		if allSuccess {
 			successPrint("All components started successfully!")
+
 			return
 		}
 	}
@@ -126,6 +128,7 @@ func exactIP(urll string) string {
 	if strings.HasSuffix(host, ":") {
 		host = host[0 : len(host)-1]
 	}
+
 	return host
 }
 
@@ -136,8 +139,7 @@ func checkMysql() error {
 			sqlDB.Close()
 		}
 	}()
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=true&loc=Local",
-		config.Config.Mysql.Username, config.Config.Mysql.Password, config.Config.Mysql.Address[0], "mysql")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.Config.Mysql.Username, config.Config.Mysql.Password, config.Config.Mysql.Address[0], config.Config.Mysql.Database)
 	db, err := gorm.Open(mysql.Open(dsn), nil)
 	if err != nil {
 		return errs.Wrap(err)
@@ -148,6 +150,7 @@ func checkMysql() error {
 			return errs.Wrap(err)
 		}
 	}
+
 	return nil
 }
 
@@ -172,11 +175,13 @@ func checkMongo() error {
 	if err != nil {
 		return errs.Wrap(err)
 	} else {
-		err = client.Ping(context.TODO(), &readpref.ReadPref{})
+		//err = client.Ping(context.TODO(), &readpref.ReadPref{})
+		err = client.Ping(context.TODO(), nil)
 		if err != nil {
 			return errs.Wrap(err)
 		}
 	}
+
 	return nil
 }
 
@@ -209,6 +214,7 @@ func checkMinio() error {
 			return ErrConfig.Wrap("apiURL or Minio SignEndpoint endpoint contain 127.0.0.1")
 		}
 	}
+
 	return nil
 }
 
@@ -236,6 +242,7 @@ func checkRedis() error {
 	if err != nil {
 		return errs.Wrap(err)
 	}
+
 	return nil
 }
 
@@ -260,6 +267,7 @@ func checkZookeeper() error {
 			return errs.Wrap(err)
 		}
 	}
+
 	return nil
 }
 
@@ -270,13 +278,7 @@ func checkKafka() error {
 			kafkaClient.Close()
 		}
 	}()
-	cfg := sarama.NewConfig()
-	if config.Config.Kafka.Username != "" && config.Config.Kafka.Password != "" {
-		cfg.Net.SASL.Enable = true
-		cfg.Net.SASL.User = config.Config.Kafka.Username
-		cfg.Net.SASL.Password = config.Config.Kafka.Password
-	}
-	kafka.SetupTLSConfig(cfg)
+	cfg := kafka.NewKafkaConfig()
 	kafkaClient, err := sarama.NewClient(config.Config.Kafka.Addr, cfg)
 	if err != nil {
 		return errs.Wrap(err)
@@ -295,6 +297,7 @@ func checkKafka() error {
 			return ErrComponentStart.Wrap(fmt.Sprintf("kafka doesn't contain topic:%v", config.Config.Kafka.LatestMsgToRedis.Topic))
 		}
 	}
+
 	return nil
 }
 

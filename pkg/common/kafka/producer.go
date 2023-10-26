@@ -24,8 +24,6 @@ import (
 	"github.com/OpenIMSDK/tools/mcontext"
 	"github.com/OpenIMSDK/tools/utils"
 
-	"github.com/openimsdk/open-im-server/v3/pkg/common/config"
-
 	"github.com/IBM/sarama"
 	"google.golang.org/protobuf/proto"
 
@@ -48,19 +46,13 @@ type Producer struct {
 // NewKafkaProducer Initialize kafka producer.
 func NewKafkaProducer(addr []string, topic string) *Producer {
 	p := Producer{}
-	p.config = sarama.NewConfig()             // Instantiate a sarama Config
+	p.config = NewKafkaConfig()               // Instantiate a sarama Config
 	p.config.Producer.Return.Successes = true // Whether to enable the successes channel to be notified after the message is sent successfully
 	p.config.Producer.Return.Errors = true
 	p.config.Producer.RequiredAcks = sarama.WaitForAll        // Set producer Message Reply level 0 1 all
 	p.config.Producer.Partitioner = sarama.NewHashPartitioner // Set the hash-key automatic hash partition. When sending a message, you must specify the key value of the message. If there is no key, the partition will be selected randomly
-	if config.Config.Kafka.Username != "" && config.Config.Kafka.Password != "" {
-		p.config.Net.SASL.Enable = true
-		p.config.Net.SASL.User = config.Config.Kafka.Username
-		p.config.Net.SASL.Password = config.Config.Kafka.Password
-	}
 	p.addr = addr
 	p.topic = topic
-	SetupTLSConfig(p.config)
 	var producer sarama.SyncProducer
 	var err error
 	for i := 0; i <= maxRetry; i++ {

@@ -271,6 +271,12 @@ type configStruct struct {
 		ThirdPrometheusPort           []int `yaml:"thirdPrometheusPort"`
 	} `yaml:"prometheus"`
 	Notification notification `yaml:"notification"`
+
+	Colline struct {
+		Host              string `yaml:"host"`
+		CustomCallbackApi string `yaml:"custom_callback_api"`
+		LinkOnceUser      string `yaml:"link_once_user"`
+	} `yaml:"colline"`
 }
 
 type notification struct {

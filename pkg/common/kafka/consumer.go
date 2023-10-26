@@ -17,8 +17,6 @@ package kafka
 import (
 	"sync"
 
-	"github.com/openimsdk/open-im-server/v3/pkg/common/config"
-
 	"github.com/IBM/sarama"
 )
 
@@ -34,13 +32,7 @@ func NewKafkaConsumer(addr []string, topic string) *Consumer {
 	p := Consumer{}
 	p.Topic = topic
 	p.addr = addr
-	consumerConfig := sarama.NewConfig()
-	if config.Config.Kafka.Username != "" && config.Config.Kafka.Password != "" {
-		consumerConfig.Net.SASL.Enable = true
-		consumerConfig.Net.SASL.User = config.Config.Kafka.Username
-		consumerConfig.Net.SASL.Password = config.Config.Kafka.Password
-	}
-	SetupTLSConfig(consumerConfig)
+	consumerConfig := NewKafkaConfig()
 	consumer, err := sarama.NewConsumer(p.addr, consumerConfig)
 	if err != nil {
 		panic(err.Error())

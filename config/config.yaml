@@ -1,6 +1,6 @@
 # Copyright © 2023 OpenIM. All rights reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the License);
+# Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -12,25 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
+
 # -----------------------------------------------------------------
-# TODO: This config file is the template file
-# --| source: deployments/templates/openim.yaml
-# --| env: scripts/install/environment
-# --| target: config/config.yaml
+# Infrastructural configurations, please modify based on your setup
 # -----------------------------------------------------------------
 
 ###################### Zookeeper ######################
 # Zookeeper configuration
 # It's not recommended to modify the schema
-# 
+#
 # Zookeeper address
 # Zookeeper username
 # Zookeeper password
 zookeeper:
   schema: openim
-  address: [ 172.28.0.1:12181 ]
-  username: ''
-  password: ''
+  address: [ 168.61.2.23:2181 ]
+  username:
+  password:
 
 ###################### Mysql ######################
 # MySQL configuration
@@ -42,10 +41,10 @@ zookeeper:
 # Log level: 1=slient, 2=error, 3=warn, 4=info
 # Slow query threshold in milliseconds
 mysql:
-  address: [ 172.28.0.1:13306 ]
-  username: root
-  password: openIM123
-  database: openIM_v3
+  address: [ 168.64.22.86:3306 ]
+  username: crdc_mysql_all
+  password: OrlhesIBVVKFM3u
+  database: test
   maxOpenConn: 1000
   maxIdleConn: 100
   maxLifeTime: 60
@@ -60,23 +59,23 @@ mysql:
 # Default MongoDB database name
 # Maximum connection pool size
 mongo:
-  uri: ''
-  address: [ 172.28.0.1:37017 ]
-  database: openIM_v3
-  username: root
-  password: openIM123
+  uri:
+  address: [ 168.64.5.236:30000,168.64.5.237:30000,168.64.5.238:30000 ]
+  database: coco_openim
+  username: coco_openim
+  password: UU_bxsn_9633
   maxPoolSize: 100
 
-###################### Redis configuration information ######################
+###################### Redis ######################
 # Redis configuration
 #
 # Username is required only for Redis version 6.0+
 redis:
-  address: [ 172.28.0.1:16379 ]
-  username: ''
-  password: openIM123
+  address: [ 168.61.10.223:6380,168.61.10.223:6379 ]
+  username:
+  password:
 
-###################### Kafka configuration information ######################
+###################### Kafka ######################
 # Kafka configuration
 #
 # Kafka username
@@ -84,31 +83,35 @@ redis:
 # It's not recommended to modify this topic name
 # Consumer group ID, it's not recommended to modify
 kafka:
-  username: ''
-  password: ''
-  addr: [ 172.28.0.1:19094 ]
+  addr: [ 168.64.25.235:9093,168.64.29.101:9093,168.64.25.234:9093 ]
   latestMsgToRedis:
-    topic: "latestMsgToRedis"
+    topic: "LINK-IM-LATESTMSGTOREDIS"
   offlineMsgToMongo:
-    topic: "offlineMsgToMongoMysql"
+    topic: "LINK-IM-OFFLINETOMONGO"
   msgToPush:
-    topic: "msgToPush"
+    topic: "LINK-IM-MSGTOPUSH"
   consumerGroupID:
+    ## LINK-IM-LATESTMSGTOREDIS
     msgToRedis: redis
+    # LINK-IM-OFFLINETOMONGO
     msgToMongo: mongo
+    ## LINK-IM-LATESTMSGTOREDIS
     msgToMySql: mysql
+    ##LINK-IM-MSGTOPUSH
     msgToPush: push
+  username:  openim
+  password:  QwErAsDf_0.O
 
-###################### RPC configuration information ######################
+###################### RPC ######################
 # RPC configuration
 #
 # IP address to register with zookeeper when starting RPC, the IP and corresponding rpcPort should be accessible by api/gateway
 # Default listen IP is 0.0.0.0
 rpc:
-  registerIP: ''
+  registerIP:
   listenIP: 0.0.0.0
 
-###################### API configuration information ######################
+###################### API ######################
 # API configuration
 #
 # API service port
@@ -117,7 +120,7 @@ api:
   openImApiPort: [ 10002 ]
   listenIP: 0.0.0.0
 
-###################### Object configuration information ######################
+###################### Gateway ######################
 # Object storage configuration
 #
 # Use minio for object storage
@@ -132,36 +135,32 @@ api:
 # minio.signEndpoint is minio public network address
 object:
   enable: "minio"
-  apiURL: "http://127.0.0.1:10002"
+  apiURL: "http://168.64.9.42:9000"
   minio:
     bucket: "openim"
-    endpoint: "http://172.28.0.1:10005"
-    accessKeyID: "root"
-    secretAccessKey: "openIM123"
-    sessionToken: ''
-    signEndpoint: "http://127.0.0.1:10005"
-    publicRead: false
+    endpoint: "http://168.64.9.42:9000"
+    accessKeyID: "admin"
+    secretAccessKey: "Htsclink@2016"
+    sessionToken: ""
+    signEndpoint: "http://168.64.9.42:9000"
   cos:
-    bucketURL: https://temp-1252357374.cos.ap-chengdu.myqcloud.com
-    secretID: ''
-    secretKey: ''
-    sessionToken: ''
-    publicRead: false
+    bucketURL: "https://temp-1252357374.cos.ap-chengdu.myqcloud.com"
+    secretID: ""
+    secretKey: ""
+    sessionToken: ""
   oss:
     endpoint: "https://oss-cn-chengdu.aliyuncs.com"
     bucket: "demo-9999999"
     bucketURL: "https://demo-9999999.oss-cn-chengdu.aliyuncs.com"
-    accessKeyID: ''
-    accessKeySecret: ''
-    sessionToken: ''
-    publicRead: false
+    accessKeyID: ""
+    accessKeySecret: ""
+    sessionToken: ""
 
-###################### RPC Port Configuration ######################
 # RPC service ports
 # These ports are passed into the program by the script and are not recommended to modify
 # For launching multiple programs, just fill in multiple ports separated by commas
 # For example, [10110, 10111]
-rpcPort: 
+rpcPort:
   openImUserPort: [ 10110 ]
   openImFriendPort: [ 10120 ]
   openImMessagePort: [ 10130 ]
@@ -172,7 +171,6 @@ rpcPort:
   openImConversationPort: [ 10180 ]
   openImThirdPort: [ 10190 ]
 
-###################### RPC Register Name Configuration ######################
 # RPC service names for registration, it's not recommended to modify these
 rpcRegisterName:
   openImUserName: User
@@ -185,7 +183,6 @@ rpcRegisterName:
   openImConversationName: Conversation
   openImThirdName: Third
 
-###################### Log Configuration ######################
 # Log configuration
 #
 # Storage directory
@@ -196,7 +193,7 @@ rpcRegisterName:
 # Whether to output in json format
 # Whether to include stack trace in logs
 log:
-  storageLocation: ../../logs/
+  storageLocation: logs/
   rotationTime: 24
   remainRotationCount: 2
   remainLogLevel: 6
@@ -204,7 +201,6 @@ log:
   isJson: false
   withStack: false
 
-###################### Variables definition ######################
 # Long connection server configuration
 #
 # Websocket port for msg_gateway
@@ -225,29 +221,29 @@ longConnSvr:
 # Account file, place it in the config directory
 # JPush configuration, modify these after applying in JPush backend
 push:
-  enable: getui
+  enable:
   geTui:
     pushUrl: "https://restapi.getui.com/v2/$appId"
-    masterSecret: ''
-    appKey: ''
-    intent: ''
-    channelID: ''
-    channelName: ''
+    masterSecret: ""
+    appKey: ""
+    intent: ""
+    channelID: ""
+    channelName: ""
   fcm:
     serviceAccount: "x.json"
   jpns:
-    appKey: ''
-    masterSecret: ''
-    pushUrl: ''
-    pushIntent: ''
+    appKey:
+    masterSecret:
+    pushUrl:
+    pushIntent:
 
 # App manager configuration
 #
 # Built-in app manager user IDs
 # Built-in app manager nicknames
 manager:
-  userID: [ "openIM123456", "openIM654321", "openIMAdmin" ]
-  nickname: [ "system1", "system2", "system3" ]
+  userID: [ "openIM123456","openIM654321","openIMAdmin" ]
+  nickname: [ "system1","system2", "system3" ]
 
 # Multi-platform login policy
 # For each platform(Android, iOS, Windows, Mac, web), only one can be online at a time
@@ -301,7 +297,6 @@ iosPush:
   badgeCount: true
   production: false
 
-###################### Third-party service configuration ######################
 # Callback configuration
 #
 # Callback URL
@@ -353,10 +348,6 @@ callback:
     enable: false
     timeout: 5
     failedContinue: true
-  beforeUpdateUserInfo:
-    enable: false
-    timeout: 5
-    failedContinue: true
   beforeCreateGroup:
     enable: false
     timeout: 5
@@ -375,7 +366,7 @@ callback:
     failedContinue: true
 
 ###################### Prometheus ######################
-# Prometheus configuration for various services
+# Prometheus configuration
 # The number of Prometheus ports per service needs to correspond to rpcPort
 # The number of ports needs to be consistent with msg_transfer_service_num in script/path_info.sh
 prometheus:
@@ -390,4 +381,10 @@ prometheus:
   conversationPrometheusPort: [ 20230 ]
   rtcPrometheusPort: [ 21300 ]
   thirdPrometheusPort: [ 21301 ]
-  messageTransferPrometheusPort: [ 21400, 21401, 21402, 21403 ] # List of ports
+  messageTransferPrometheusPort: [ 21400, 21401, 21402, 21403 ]
+
+## 数字办公助手的
+colline:
+  host: http://168.61.101.171:8083
+  custom_callback_api: /link-deskplay/api/v1/openim/custom/handle
+  link_once_user: sys_link_once
