@@ -18,6 +18,9 @@
 # Infrastructural configurations, please modify based on your setup
 # -----------------------------------------------------------------
 
+envs:
+  discovery: zookeeper
+
 ###################### Zookeeper ######################
 # Zookeeper configuration
 # It's not recommended to modify the schema
@@ -25,9 +28,6 @@
 # Zookeeper address
 # Zookeeper username
 # Zookeeper password
-envs:
-  discovery: zookeeper
-
 zookeeper:
   schema: openim
   address: [ 168.61.2.23:2181 ]
@@ -167,7 +167,6 @@ rpcPort:
   openImUserPort: [ 10110 ]
   openImFriendPort: [ 10120 ]
   openImMessagePort: [ 10130 ]
-  openImMessageGatewayPort: [ 10140 ]
   openImGroupPort: [ 10150 ]
   openImAuthPort: [ 10160 ]
   openImPushPort: [ 10170 ]
@@ -212,8 +211,8 @@ log:
 # Websocket connection handshake timeout
 longConnSvr:
   openImWsPort: [ 10001 ]
-  openImMessageGatewayPort: [ 10140 ]
   websocketMaxConnNum: 100000
+  openImMessageGatewayPort: [ 10140 ]
   websocketMaxMsgLen: 4096
   websocketTimeout: 10
 
